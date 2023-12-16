@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    header {
+        padding: 20px;
+        background-color: #333;
+        text-align: center;
+    }
+
+    header a{
+        text-decoration: none;
+        color: #f0f0f0;
+        font-weight: bold;
+    }
+
+    #centerDiv {
+      /* width: 200px;
+      height: 200px; */
+      background-color: #f0f0f0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .contents {
+    background-image:url(https://img.freepik.com/premium-vector/football-field-with-green-grass-vector-illustration_515038-1913.jpg) ;
+    background-size: 60vw 100vh;
+    background-position:center;
+    background-repeat: no-repeat;
+   }
+
+   .container1 {
+    width: 50vw;
+    height: 15vh;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns:20% 12% 18% 18% 12% 20%;
+   }
+   .container2 {
+    width: 50vw;
+    height: 30vh;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 20% 30% 30% 20%;
+    grid-template-rows: 30% 40% 30%;
+   }
+
+   .box {
+    text-align: center;
+    background-color: lightgreen;
+    opacity: 10%;
+   }
+   .box1 {
+    text-align: center;
+    background-color: lightgreen;
+    opacity: 10%;
+   }
+   
+   .container1 .box:hover {
+    opacity: 50%;
+   }
+   .container2 .box:hover {
+    opacity: 50%;
+   }
+   .container1 .box1:hover {
+    opacity: 50%;
+    cursor: url(cursor.cur) 20 30, auto;
+   }
+   .container2 .box1:hover {
+    opacity: 50%;
+    cursor: url(cursor.cur) 20 30, auto;
+   }   
+  </style>
+  <script>
+    let ballImage;
+    let ball;
+    let centerDiv;
+
+    function preload() {
+      // 축구공 이미지 로드
+      ballImage = loadImage('soccer_ball_pattern.png');
+    }
+
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      ball = new Ball();
+      centerDiv = select('#centerDiv');
+    }
+
+    function draw() {
+      background(220);
+      ball.update();
+      ball.display();
+    }
+
+    class Ball {
+      constructor() {
+        this.position = createVector(width / 2, height / 10); // Start from the top, 1/4 down the height
+        this.velocity = createVector(3, 2);
+        this.radius = 20;
+      }
+
+      update() {
+        this.position.add(this.velocity);
+
+        // Check collision with the walls
+        if (this.position.x + this.radius > width || this.position.x - this.radius < 0) {
+          this.velocity.x *= -1;
+        }
+        if (this.position.y + this.radius +61 > height || this.position.y - this.radius < 0) {
+          this.velocity.y *= -1;
+        }
+
+        // Check collision with the mouse
+        let d = dist(this.position.x, this.position.y, mouseX, mouseY);
+        if (d < this.radius) {
+          // Bounce off the mouse
+          let normal = createVector(this.position.x - mouseX, this.position.y - mouseY);
+          normal.normalize();
+          this.velocity.reflect(normal);
+        }
+
+        // Check collision with the center div
+        let divLeft = centerDiv.position().x -10 - centerDiv.width / 2;
+        let divRight = centerDiv.position().x + centerDiv.width / 2;
+        let divTop = centerDiv.position().y - 61 - centerDiv.height / 2;
+        let divBottom = centerDiv.position().y - 61 + centerDiv.height / 2;
+
+        let closestX = constrain(this.position.x, divLeft, divRight);
+        let closestY = constrain(this.position.y, divTop, divBottom);
+
+        let distanceX = this.position.x - closestX;
+        let distanceY = this.position.y - closestY;
+        let distanceSquared = distanceX ** 2 + distanceY ** 2;
+
+        if (distanceSquared < this.radius ** 2) {
+          // Bounce off the div
+          let normal = createVector(this.position.x - closestX, this.position.y - closestY);
+          normal.normalize();
+          this.velocity.reflect(normal);
+        }
+      }
+
+      display() {
+        // 축구공 이미지 그리기
+        imageMode(CENTER);
+        image(ballImage, this.position.x, this.position.y, this.radius * 2, this.radius * 2);
+      }
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+    }
+  </script>
+  <title>Positions</title>
+</head>
+<body>
+    <header><a href="index.html">How to use space?</a></header>
+    <div id="centerDiv">
+        <div class="contents">
+            <div class="wrapper">
+                <div class="container1">
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box1" onclick="location.href='box3.html'"></div>
+                    <div class="box"></div>
+                    <div class="box1" onclick="location.href='box5.html'"></div>
+                    <div class="box"></div>
+                </div>
+        
+                <div class="container2">
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box1" onclick="location.href='box2-3.html'"></div>
+                    <div class="box1" onclick="location.href='box2-4.html'"></div>
+                    <div class="box"></div>
+                    <div class="box1" onclick="location.href='box2-6.html'"></div>
+                    <div class="box1" onclick="location.href='box2-7.html'"></div>
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box1" onclick="location.href='box2-3.html'"></div>
+                    <div class="box1" onclick="location.href='box2-4.html'"></div>
+                </div>
+        
+                <div class="container1">
+                    <div class="box"></div>
+                    <div class="box"></div>
+                    <div class="box1" onclick="location.href='box3.html'"></div>
+                    <div class="box"></div>
+                    <div class="box1" onclick="location.href='box5.html'"></div>
+                    <div class="box"></div>
+                </div>
+        </div>
+  </div>
+
+
+</body>
+</html>

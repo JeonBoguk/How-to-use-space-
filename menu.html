@@ -1,0 +1,225 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artistic Page Transition</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Arial', sans-serif;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1; /* 캔버스를 배경 위에 위치시킴 */
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+      position: relative;
+      z-index: 2; /* 콘텐츠를 캔버스 위에 위치시킴 */
+    }
+
+    .art-box {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1000px;
+      cursor: pointer;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .art-box:hover::before,
+    .expanded.left .art-box::before,
+    .expanded.center .art-box::before,
+    .expanded.right .art-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      opacity: 1;
+      transition: opacity 0.3s;
+    }
+
+    .text {
+      color: white;
+      font-size: 24px;
+      text-align: center;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .art-box:hover .text,
+    .expanded .text {
+      opacity: 1;
+    }
+
+    .expanded.left .art-box::before {
+      transform: scaleX(3) translateX(100%);
+    }
+
+    .expanded.center .art-box::before {
+      transform: scaleX(3);
+    }
+
+    .expanded.right .art-box::before {
+      transform: scaleX(3) translateX(-100%);
+    }
+
+    .expanded .text {
+      opacity: 0;
+    }
+
+    .expanded {
+      background-color: black;
+    }
+
+    .pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <script>
+    let particles = [];
+    let pastelColor;
+    let soccerBallImage;
+    let soccerBalls = [];
+
+    function preload() {
+      soccerBallImage = loadImage('soccer_ball_pattern.png'); // 이미지 불러오기
+    }
+
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      pastelColor = color(255, 182, 193);
+      soccerBalls.push(new SoccerBall());
+    }
+
+    function draw() {
+      let pastelR = map(mouseX, 0, width, 255, 200);
+      let pastelG = map(mouseY, 0, height, 182, 220);
+
+      // 배경 색을 불투명하게
+      background(pastelR, pastelG, pastelColor.levels[2], 50);
+
+      // 배경 패턴
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].display();
+      }
+
+      // 축구공
+      for (let i = 0; i < soccerBalls.length; i++) {
+        soccerBalls[i].update();
+        soccerBalls[i].display();
+      }
+    }
+
+    class Particle {
+      constructor() {
+        this.pos = createVector(random(width), random(height));
+        this.vel = createVector(random(-1, 1), random(-1, 1));
+        this.size = random(5, 15);
+      }
+
+      update() {
+        this.pos.add(this.vel);
+        if (this.pos.x < 0 || this.pos.x > width || this.pos.y < 0 || this.pos.y > height) {
+          this.pos = createVector(random(width), random(height));
+        }
+      }
+
+      display() {
+        noStroke();
+        fill(0, 0, 0, 50);
+        ellipse(this.pos.x, this.pos.y, this.size, this.size);
+      }
+    }
+
+    class SoccerBall {
+      constructor() {
+        this.pos = createVector(random(width), random(height));
+        this.vel = createVector(random(-2, 2), random(-2, 2));
+        this.size = 40;
+        this.bounceCount = 0;
+      }
+
+      update() {
+        this.pos.add(this.vel);
+
+        // 벽에 닿으면 튕기기
+        if (this.pos.x - this.size / 2 < 0 || this.pos.x + this.size / 2 > width) {
+          this.vel.x *= -1;
+        }
+        if (this.pos.y - this.size / 2 < 0 || this.pos.y + this.size / 2 > height) {
+          this.vel.y *= -1;
+        }
+
+        // 10번 튕기면 새로운 공 생성
+        this.bounceCount++;
+        if (this.bounceCount >= 10) {
+          this.bounceCount = 0;
+          this.pos = createVector(random(width), random(height));
+          this.vel = createVector(random(-2, 2), random(-2, 2));
+        }
+      }
+
+      display() {
+        imageMode(CENTER);
+        image(soccerBallImage, this.pos.x, this.pos.y, this.size, this.size);
+      }
+    }
+
+    // 초기 배경 패턴 생성
+    for (let i = 0; i < 100; i++) {
+      particles.push(new Particle());
+    }
+
+    function handleClick(targetPage, direction) {
+      document.body.classList.toggle('expanded');
+      document.body.classList.toggle(direction);
+
+      setTimeout(() => {
+        window.location.href = targetPage;
+      }, 500);
+    }
+  </script>
+
+  <div class="pattern"></div>
+
+  <div class="container">
+    <div class="art-box" onclick="handleClick('page1.html', 'left')">
+      <div class="text">History</div>
+    </div>
+    <div class="art-box" onclick="handleClick('page2.html', 'center')">
+      <div class="text">Head Coaches</div>
+    </div>
+    <div class="art-box" onclick="handleClick('page3.html', 'right')">
+      <div class="text">Positions</div>
+    </div>
+  </div>
+</body>
+</html>

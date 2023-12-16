@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Website</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000; /* 검정색 배경 */
+            overflow: hidden; /* 바디에 overflow: hidden 적용 */
+        }
+
+        .banner {
+            background-color: #333; /* 배너 배경색 */
+            padding: 20px;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .banner a {
+            color: #fff; /* 텍스트 색상 */
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .image-banner {
+            display: flex;
+            justify-content: flex-end; /* 이미지를 오른쪽에 정렬 */
+            align-items: flex-end; /* 이미지를 아래쪽에 정렬 */
+            height: 100vh; /* 화면 전체 높이로 설정 */
+            white-space: nowrap; /* 이미지를 가로로 나열하기 위해 줄 바꿈 제거 */
+            position: relative; /* 상대적 위치 설정 */
+        }
+
+        .item {
+            position: relative;
+            width: 100vw; /* 화면 전체 너비로 이미지 및 텍스트 영역 설정 */
+            height: 50vh; /* 이미지 및 텍스트 영역 높이 설정 */
+            display: inline-block; /* 이미지를 가로로 나열하기 위해 인라인 블록으로 설정 */
+            transition: transform 0.3s; /* 호버 시 변환 효과 추가 */
+        }
+
+        .image {
+            width: 100%; /* 이미지의 크기를 100%로 설정하여 부모 요소에 맞춤 */
+            height: 130%; /* 이미지의 크기를 130%로 설정하여 부모 요소에 맞춤 */
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: transform 0.3s; /* 호버 시 변환 효과 추가 */
+        }
+
+        .text {
+            position: absolute;
+            bottom: 50%; /* 이미지의 아래쪽 중앙에 위치 */
+            left: 50%; /* 이미지의 가운데에 위치 */
+            transform: translate(-50%, -700%); /* 텍스트를 정확한 위치에 이동 */
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.3s; /* 호버 시 변환 효과 추가 */
+        }
+
+        .item:hover {
+            transform: scale(1.1); /* 호버 시 이미지 및 텍스트 확대 */
+        }
+
+        .item:hover .image {
+            transform: scale(1.2); /* 호버 시 이미지 확대 */
+        }
+
+        .item:hover .text {
+            transform: translate(-50%, -900%); /* 호버 시 텍스트 확대 및 위치 조정 */
+        }
+
+        .hover-image {
+            display: none;
+            position: absolute;
+            top: -70%;
+            z-index: 999;
+            transition: opacity 0.3s; /* 호버 시 페이드 효과 추가 */
+        }
+
+        .item:hover .hover-image {
+            display:block;
+        }
+
+        .hover-image img {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 첫 번째 이미지에 대한 개별적인 스타일 */
+        .item:first-child .hover-image {
+            left: 20%; /* 첫 번째 호버 이미지만 조금 오른쪽으로 옮김 */
+            top: -60%;
+        }
+
+        /* 두 번째 이미지에 대한 개별적인 스타일 */
+        .item:nth-child(2) .hover-image {
+            top: -60%;
+        }
+
+        /* 나머지 이미지에 대한 개별적인 스타일 */
+        .item:nth-child(4) .hover-image {
+            left: 10%;
+            top: -60%;
+        }
+
+        .item:nth-child(5) .hover-image {
+            left: 15%;
+            top: -60%;
+        }
+
+        .item:nth-child(6) .hover-image {
+            left: 15%;
+            top: -60%;
+        }
+
+        .content {
+            /* 페이지 내용 스타일링 */
+            margin-top: 20px; /* 내용과 이미지 배너 간의 여백 조절 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 상단 배너 -->
+    <div class="banner">
+        <a href="index.html">How to use space?</a>
+    </div>
+
+    <!-- 이미지 배너 -->
+    <div class="image-banner">
+        <!-- 6명의 이미지와 텍스트를 흐르게 만듭니다. -->
+        <div class="item">
+            <div class="image" style="background-image: url('HC1.png');"></div>
+            <div class="text">Pep Guardiola</div>
+            <div class="hover-image"><img src="logo1.png" alt="Hover Image 1"></div>
+        </div>
+        <div class="item">
+            <div class="image" style="background-image: url('HC2.png');"></div>
+            <div class="text">Jürgen Klopp</div>
+            <div class="hover-image"><img src="logo2.png" alt="Hover Image 2" width="50px" height="50px"></div>
+        </div>
+        <div class="item">
+            <div class="image" style="background-image: url('HC3.png');"></div>
+            <div class="text">Ange Postecoglou</div>
+            <div class="hover-image"><img src="logo3.png" alt="Hover Image 3"></div>
+        </div>
+        <div class="item">
+            <div class="image" style="background-image: url('HC4.png');"></div>
+            <div class="text">Xavi Alonso</div>
+            <div class="hover-image"><img src="logo4.png" alt="Hover Image 4"></div>
+        </div>
+        <div class="item">
+            <div class="image" style="background-image: url('HC5.png');"></div>
+            <div class="text">Roberto De Zerbi</div>
+            <div class="hover-image"><img src="logo5.png" alt="Hover Image 5"></div>
+        </div>
+        <div class="item">
+            <div class="image" style="background-image: url('HC6.png');"></div>
+            <div class="text">Arne Slot</div>
+            <div class="hover-image"><img src="logo6.png" alt="Hover Image 6"></div>
+        </div>
+    </div>
+
+    <!-- 페이지 내용 -->
+    <div class="content">
+        <!-- 페이지 내용 추가 -->
+    </div>
+</body>
+</html>
